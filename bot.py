@@ -17,7 +17,13 @@ bot = commands.Bot(command_prefix='&')
 @bot.event
 async def on_ready():
     print(f'{bot.user.name} joined the homies!')
-
+    
+@bot.event
+async def on_message(ctx):
+    if ctx.content.find("what did I drop?") != -1:
+        response = "YOU DROPPED THIS KING --> :crown:"
+        await ctx.channel.send(response)
+    
 @bot.command(name='shibe',help='get a good boy')
 async def dog(ctx):
     async with ctx.channel.typing():
@@ -27,7 +33,7 @@ async def dog(ctx):
                 embed=discord.Embed(title="awoo")
                 embed.set_image(url=data[0])
                 await ctx.send(embed=embed)
-
+                
 @bot.command(name='joke',help='whenever you need a laugh')
 async def joke(ctx):
     async with ctx.channel.typing():
@@ -36,5 +42,5 @@ async def joke(ctx):
         jsr=r.json()
         await ctx.send(jsr["joke"])
 
-    
 bot.run(TOKEN)
+
