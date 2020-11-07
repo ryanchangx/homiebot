@@ -3,9 +3,15 @@ import os
 import discord
 import requests
 import wget
+import random
 import aiohttp
 import json
+import base64
+import spotipy
+import sys
 
+from spotipy.oauth2 import SpotifyClientCredentials
+from googletrans import Translator
 from dotenv import load_dotenv
 from discord.ext import commands
 
@@ -17,13 +23,13 @@ bot = commands.Bot(command_prefix='&')
 @bot.event
 async def on_ready():
     print(f'{bot.user.name} joined the homies!')
-    
-@bot.event
-async def on_message(ctx):
-    if ctx.content.find("what did I drop?") != -1:
-        response = "YOU DROPPED THIS KING --> :crown:"
+
+@bot.command(name='crown',help='tells you what you dropped')
+async def crowndrop(ctx):
+    async with ctx.channel.typing():
+        response = "YOU DROPPED THIS YOUR MAJESTY --> :crown:"
         await ctx.channel.send(response)
-    
+
 @bot.command(name='shibe',help='get a good boy')
 async def dog(ctx):
     async with ctx.channel.typing():
@@ -42,9 +48,132 @@ async def joke(ctx):
         jsr=r.json()
         await ctx.send(jsr["joke"])
 
+@bot.command(name='trivia',help='are you a dumbass? find out')
+async def trivia(ctx):
+    async with ctx.channel.typing():
+        r=requests.get('https://opentdb.com/api.php?amount=1&type=multiple&encode=base64')
+        r.raise_for_status()
+        jsr=r.json()
+        response = jsr['results'][0]['question']
+        response = base64.b64decode(response)
+        await ctx.send(response.decode("utf-8"))
+        nesteddict = jsr['results'][0]
+        answers = nesteddict['incorrect_answers']
+        i = 0
+        while (i < len(answers)):
+            answers[i]=base64.b64decode(answers[i]).decode("utf-8")
+            i += 1
+        answerkey = base64.b64decode(nesteddict['correct_answer']).decode("utf-8")
+        answers.append(answerkey)
+        random.shuffle(answers)
+        for words in answers:
+            await ctx.send(words)
+        answerresponse = "Answer: " + answerkey
+    #user input, type string use future async coroutines
+        # await askresponse(ctx,answerkey)
+        await ctx.send(answerresponse)
+
+@bot.command(name='covid',help='check covid 19 statistics')
+async def covid(ctx):
+    async with ctx.channel.typing():
+        r=requests.get('https://api.covid19api.com/summary')
+        r.raise_for_status()
+        jsr=r.json()
+        await ctx.send("Global Covid Stats:")
+        for key in jsr['Global']:
+            response = '\n - ' + key + ": " + str(jsr['Global'][key])
+            await ctx.send(response)
+        await ctx.send("United States Covid Stats:")
+        USDATA = jsr['Countries'][181]
+        del USDATA['Country']
+        del USDATA['CountryCode']
+        del USDATA['Slug']
+        del USDATA['Date']
+        del USDATA['Premium']
+        for key in USDATA:
+            await ctx.send('\n - ' + key + ": " + str(USDATA[key]))
+        await ctx.send("Stay Safe :heart:")
+
+#dont touch my stuff 
+@bot.command(name='rps',help='rock paper scissors vs bot')
+async def rps(ctx, choice: str):
+    #deciding the bot's choice
+    botChoiceNum = random.randint(1,3)
+    if (botChoiceNum == 1):
+        botChoiceStr = "rock"
+    elif (botChoiceNum == 2):
+        botChoiceStr = "paper"
+    elif (botChoiceNum == 3):
+        botChoiceStr = "scissors"
+    else:
+        botChoiceStr = "oops" 
+    #deciding the outcome
+    if (choice == "rock" and botChoiceStr == "scissors"):
+        outcome = "Win!"
+    elif (choice == "rock" and botChoiceStr == "rock"):
+        outcome = "Tie :/"
+    elif (choice == "paper" and botChoiceStr == "rock"):
+        outcome = "Win!"
+    elif (choice == "paper" and botChoiceStr == "paper"):
+        outcome = "Tie :/"
+    elif (choice == "scissors" and botChoiceStr == "paper"):
+        outcome = "Win!"
+    elif (choice == "scissors" and botChoiceStr == "scissors"):
+        outcome = "Tie :/"
+    else:
+        outcome = "Lose :("
+    response = "Homie chose %s, so you %s" % (botChoiceStr,outcome)
+    await ctx.send(response)
 
 
-#@bot.command(name='rps',help='rock paper scissors vs bot')
+#DON'T TOUCHA MAH SPAGHET
+@bot.command(name='8ball',help='Ask the 8ball for a magic message')
+async def on_ball(ctx):
+    response = "Magic 8-ball says...."
+    async with ctx.channel.typing():
+        await ctx.channel.send(response)
+        value=random.randint(0,7)
+        if (value == 0):
+            answer = "cuck you g"
+        elif (value == 1):
+            answer = "MOTHAHYUCKIN YEAH"
+        elif (value == 2):
+            answer = "GOD TO THE FREAKING NO CHIEF"
+        elif (value == 3):
+            answer = "BRUH BRUH BRUH"
+        elif (value == 4):
+            answer = "SHUT YOUR MOUTH DAWGGGG"
+        elif (value == 5):
+            answer = "BIG BOY SAYS UHHHHHHHHHHHH (cuck you)"
+        elif (value == 6):
+            answer = "DON'T ASK ME, ASK CHOCCY"
+        elif (value == 7):
+            answer = "BEEP BOOP FRICK"
+        await ctx.channel.send(answer)
+
+
+@bot.command(name = 'meme',help='Ask the homie to cope' )
+async def meme(ctx):
+    async with ctx.channel.typing():
+        async with aiohttp.ClientSession() as cs:
+            async with cs.get('https://some-random-api.ml/meme') as f:
+                data = await f.json()
+                embed = discord.Embed(title='meme')
+                embed.set_image(url=data['image'])
+                await ctx.send(embed=embed)
+
+
+
+
+@bot.command(name='translate',help='Translate any word!')
+async def translate_message(ctx, phrase: str):
+    async with ctx.channel.typing():
+        translator = Translator()
+        message = translator.translate(phrase)
+        await ctx.channel.send(message.text)
+
+
 
     
+#don't toucha mah spaghet
 bot.run(TOKEN)
