@@ -36,5 +36,9 @@ async def joke(ctx):
         jsr=r.json()
         await ctx.send(jsr["joke"])
 
+
+
+#@bot.command(name='rps',help='rock paper scissors vs bot')
+
     
 bot.run(TOKEN)
