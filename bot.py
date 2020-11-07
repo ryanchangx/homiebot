@@ -4,6 +4,7 @@ import discord
 import requests
 import wget
 import aiohttp
+import json
 
 from dotenv import load_dotenv
 from discord.ext import commands
@@ -32,5 +33,14 @@ async def dog(ctx):
                 embed=discord.Embed(title="awoo")
                 embed.set_image(url=data[0])
                 await ctx.send(embed=embed)
+                
+@bot.command(name='joke',help='whenever you need a laugh')
+async def joke(ctx):
+    async with ctx.channel.typing():
+        r=requests.get('https://sv443.net/jokeapi/v2/joke/Any?type=single')
+        r.raise_for_status()
+        jsr=r.json()
+        await ctx.send(jsr["joke"])
 
 bot.run(TOKEN)
+
