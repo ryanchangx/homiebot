@@ -24,6 +24,12 @@ bot = commands.Bot(command_prefix='&')
 async def on_ready():
     print(f'{bot.user.name} joined the homies!')
 
+@bot.command(name='naptime',help='Homie Bot takes a nap')
+async def shutdown(ctx):
+    print(f'{bot.user.name} went to sleep!')
+    await ctx.send(f"{bot.user.name} went to sleep!")
+    await ctx.bot.logout()
+
 @bot.command(name='crown',help='tells you what you dropped')
 async def crowndrop(ctx):
     async with ctx.channel.typing():
@@ -134,21 +140,21 @@ async def on_ball(ctx):
         await ctx.channel.send(response)
         value=random.randint(0,7)
         if (value == 0):
-            answer = "cuck you g"
+            answer = "HMMMM WHAT LIES AHEAD IS UNKNOWN"
         elif (value == 1):
-            answer = "MOTHAHYUCKIN YEAH"
+            answer = "HECK YEAH!!!!!"
         elif (value == 2):
-            answer = "GOD TO THE FREAKING NO CHIEF"
+            answer = "ABSOLUTELY NO!!!!"
         elif (value == 3):
-            answer = "BRUH BRUH BRUH"
+            answer = "I DON'T THINK THAT'S A GREAT IDEA...."
         elif (value == 4):
-            answer = "SHUT YOUR MOUTH DAWGGGG"
+            answer = "THERE'S ONLY ONE WAY TO FIND OUT"
         elif (value == 5):
-            answer = "BIG BOY SAYS UHHHHHHHHHHHH (cuck you)"
+            answer = "IN THE ENTIRETY OF MY EXISTENCE AS A BOT, THIS IS THE BIGGEST YES I HAVE WITNESSED"
         elif (value == 6):
-            answer = "DON'T ASK ME, ASK CHOCCY"
+            answer = "MY MASTERS DEEMED ME UNWORTHY TO ANSWER QUESTION..."
         elif (value == 7):
-            answer = "BEEP BOOP FRICK"
+            answer = "BEEP BOOP MALFUNCTION....HAHA NAH I'M JUST KIDDING. THAT'S A GREAT QUESTION: DEFINITELY YES"
         await ctx.channel.send(answer)
 
 
@@ -156,14 +162,11 @@ async def on_ball(ctx):
 async def meme(ctx):
     async with ctx.channel.typing():
         async with aiohttp.ClientSession() as cs:
-            async with cs.get('https://some-random-api.ml/meme') as f:
+            async with cs.get('https://meme-api.herokuapp.com/gimme') as f:
                 data = await f.json()
-                embed = discord.Embed(title='meme')
-                embed.set_image(url=data['image'])
+                embed = discord.Embed(title='HAHA FUNNY')
+                embed.set_image(url=data['url'])
                 await ctx.send(embed=embed)
-
-
-
 
 @bot.command(name='translate',help='Translate any word!')
 async def translate_message(ctx, phrase: str):
@@ -172,7 +175,10 @@ async def translate_message(ctx, phrase: str):
         message = translator.translate(phrase)
         await ctx.channel.send(message.text)
 
-
+@bot.command(name='cap',help='Speech before the greatest fight of your life')
+async def endgame(ctx):
+    response = "Five years ago, we lost. \nAll of us. \nWe lost friends. \nWe lost family. \nWe lost a part of ourselves. \nToday, we have a chance to take it all back. \nYou know your teams, you know your missions. \nGet the stones, get them back. \nOne round trip each. \nNo mistakes. \nNo do-overs. \nMost of us are going somewhere we know, that doesn't mean we should know what to expect. \nBe careful. \nLook out for each other. \nThis is the fight of our lives. \nAnd we're going to win. \nWhatever it takes. \n\nGood luck."
+    await ctx.channel.send(response)
 
     
 #don't toucha mah spaghet
