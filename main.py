@@ -2,15 +2,10 @@
 import os
 import discord
 import requests
-import wget
 import random
 import aiohttp
-import json
 import base64
-import spotipy
-import sys
 
-from spotipy.oauth2 import SpotifyClientCredentials
 from googletrans import Translator
 from dotenv import load_dotenv
 from discord.ext import commands
@@ -24,11 +19,11 @@ bot = commands.Bot(command_prefix='&')
 async def on_ready():
     print(f'{bot.user.name} joined the homies!')
 
-@bot.command(name='naptime',help='Homie Bot takes a nap')
-async def shutdown(ctx):
-    print(f'{bot.user.name} went to sleep!')
-    await ctx.send(f"{bot.user.name} went to sleep!")
-    await ctx.bot.logout()
+# @bot.command(name='naptime',help='Homie Bot takes a nap')
+# async def shutdown(ctx):
+#     print(f'{bot.user.name} went to sleep!')
+#     await ctx.send(f"{bot.user.name} went to sleep!")
+#     await ctx.bot.logout()
 
 @bot.command(name='thecards',help='draws the cards for today')
 async def cards(ctx, value: int):
