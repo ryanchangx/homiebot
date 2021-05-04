@@ -30,6 +30,26 @@ async def shutdown(ctx):
     await ctx.send(f"{bot.user.name} went to sleep!")
     await ctx.bot.logout()
 
+@bot.command(name='thecards',help='draws the cards for today')
+async def cards(ctx, value: int):
+    suits = [':hearts: - burpees',':clubs: - sit-ups',':spades: - pushups',':diamonds: - squats']
+    cards = ['A','2','3','4','5','6','7','8','9','J','Q','K']
+    deck = [':black_joker: - 10 of every exercise',':black_joker: - 10 of every exercise']
+    for s in suits:
+        for c in cards:
+            deck.append(c + ' ' + s)
+    response = "Today's cards are: \n"
+    for x in range(0,value):
+        card = random.choice(deck)
+        deck.remove(card)
+        response += card + '\n'
+    msg = await ctx.channel.send(response)
+    turban = '\N{MAN WITH TURBAN}'
+    await ctx.add_reaction(msg, turban)
+
+    
+    
+
 @bot.command(name='crown',help='tells you what you dropped')
 async def crowndrop(ctx):
     async with ctx.channel.typing():
@@ -138,7 +158,7 @@ async def on_ball(ctx):
     response = "Magic 8-ball says...."
     async with ctx.channel.typing():
         await ctx.channel.send(response)
-        value=random.randint(0,7)
+        value=random.randint(0,17)
         if (value == 0):
             answer = "HMMMM WHAT LIES AHEAD IS UNKNOWN"
         elif (value == 1):
@@ -155,8 +175,27 @@ async def on_ball(ctx):
             answer = "MY MASTERS DEEMED ME UNWORTHY TO ANSWER QUESTION..."
         elif (value == 7):
             answer = "BEEP BOOP MALFUNCTION....HAHA NAH I'M JUST KIDDING. THAT'S A GREAT QUESTION: DEFINITELY YES"
+        elif (value == 8):
+             answer = "cuck you g"
+        elif (value == 9):
+             answer = "MOTHAHYUCKIN YEAH"
+        elif (value == 10):
+             answer = "GOD TO THE FREAKING NO CHIEF"
+        elif (value == 11):
+             answer = "BRUH BRUH BRUH"
+        elif (value == 12):
+             answer = "SHUT YOUR MOUTH DAWGGGG"
+        elif (value == 13):
+             answer = "BIG BOY SAYS UHHHHHHHHHHHH (cuck you)"
+        elif (value == 14):
+             answer = "DON'T ASK ME, ASK CHOCCY"
+        elif (value == 15):
+             answer = "BEEP BOOP FRICK"
+        elif (value == 16):
+             answer = "stfu"
+        elif (value == 17):
+             answer = "stfu"
         await ctx.channel.send(answer)
-
 
 @bot.command(name = 'meme',help='Ask the homie to cope' )
 async def meme(ctx):
@@ -179,7 +218,6 @@ async def translate_message(ctx, phrase: str):
 async def endgame(ctx):
     response = "Five years ago, we lost. \nAll of us. \nWe lost friends. \nWe lost family. \nWe lost a part of ourselves. \nToday, we have a chance to take it all back. \nYou know your teams, you know your missions. \nGet the stones, get them back. \nOne round trip each. \nNo mistakes. \nNo do-overs. \nMost of us are going somewhere we know, that doesn't mean we should know what to expect. \nBe careful. \nLook out for each other. \nThis is the fight of our lives. \nAnd we're going to win. \nWhatever it takes. \n\nGood luck."
     await ctx.channel.send(response)
-
-    
+  
 #don't toucha mah spaghet
 bot.run(TOKEN)
